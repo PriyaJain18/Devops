@@ -1,0 +1,75 @@
+## GENERAL QUESTIONS : 
+
+> What are key components of cloud infra ? : VM,storage, network , security 
+
+> L7 vs L4 load balancers ? 
+
+> Procedure you can think of to create login mechanism of ec2 of aws ? (like how ssh login works, pem is created & what it consists of)
+
+> How does SSL works? How to encrypt/decrypt something?
+
+>  SDN ? software deinfed networking
+
+> What happens when u make a url req at browser ? ::
+
+Url parsing (browser extract domain name, protocol etc) -> queries DNS server for IP of domain , DNS server returns IP  ->client makes TCP connection (Http/https=tls andshake) to returned IP  -> processing of req at server side -> data +status code+headers returned to client -> broswer do content rendering & displays  html etc page response 
+
+----
+
+# LINUX
+
+> How to create a user without password in linux ? 
+
+> If your linux machine is working slow, how will you troubleshoot it (steps) ? 
+
+> check free space in linux : df -h, du 
+
+> if .pem is lost , can we login into AWS EC2 instances? If yes, how ?
+
+----
+#GIT 
+
+> Main VS master branch in git ? 
+main [when repo created with readme/txt files] vs master branch
+
+> What to do when we forgot git client password set in local system ->token generation in github , [passphrase:] we can create new ssh public-private key-pair using gitbash and set pub key in  github.
+
+----
+#DOCKER
+
+> Challenges faced with docker in production environments ?
+1. docker image size reduction -> Sol : multistage build, distroless images
+
+> diff btw RUN and CMD in dockerfile ?
+RUN -> execute commands wile  building imagr, multiple RUN commands in a dockerfile possible
+CMD -> execute commands while we run image, 1 CMD command in a dockerfile
+
+----
+
+# K8S 
+
+> what is pod manifest in k8s ? 
+
+----
+# TERRAFORM
+
+> Challenges faced with terraform :
+1. Need to maintain the script versioning:  backend stored in s3/dynamodb for versioning of scripts 
+ 
+----
+#JENKINS
+
+> what happens if stages have same name in jenkins ? 
+
+> Name some common plugins in jenkins / plugins you used :ex. thin backup plugin etc
+
+> if jenkins master fail, what happens to jobs that were to be run by it -> take backup & associate vol to new instance 
+
+> To pass the output of one job to other we use ? : upstream downstream plugin??
+
+> connect pipeline -1 ending to trigger pipeline-2 starting in jenkins without using UI , but using script
+
+----
+## OTHERS : 
+> sonar cube : check code quality using some rules we define    
+connection, vol extended 
