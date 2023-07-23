@@ -3,15 +3,43 @@
 > What are key components of cloud infra ? : VM,storage, network , security 
 
 > L7 vs L4 load balancers ? 
+L4: simple Load balancing thus faster, routing based on source &destination IPs & ports ; works with TCP/UDP (makes 2 connections : user---LB & LB---server)
+L7 (L5 through L7) : intelligent (/clothes has diff server endpoint) routing ,SSL termination, session persistence ; checks data content, HTTP headers, urls , cookies & other "Application-specific" info  ; works with HTTP/HTTPS
+
 
 > Procedure you can think of to create login mechanism of ec2 of aws ? (like how ssh login works, pem is created & what it consists of)
 
-> How does SSL works? How to encrypt/decrypt something?
+ec2 launch -> public key in metadata of instance & private key stored locally -> aws cloud-init : initialize ec2 ,setup ssh server, install packages & config setting using userdata & metadata ->public ssh key is injected into '~/.ssh/autorized_keys' file for default user -> User use ssh-client "ssh" (ssh ec2-user@<public-IP> -i <private-ssh-key.pem>) from his/her local system  -> if private key(saved in local system) matches public key (saved in ec2-metadata) -> user gets ssh-ed into ec2 with default user 
+
+SSH : Secure SHell -> cryptographic network protocol used to access remote servers (get to use other system's CLI remotely) which uses Asymetric (=cipher/method/algorithm) encryption (public key = Encrypter, private key = decrypter) ;  Encryption methods : RSA, DSA, ed25519 etc
+
+USER ---------public key --------------->amazon server [encrypt_using_publicKey(top secret)]
+      ---I want to ssh into ur server---->
+     <-- try decrypting our E(topsecret) & we will allow u to access us--
+  D_using_privatekey(top secret)----------------> Cool, top secret is decrypted by user
+     =============[ SSH TUNNEL CREATED ]========================
+
+.pem and .ppk => different formats (associated with diff SSH clients) for storing private/public keys & certificates in context of secure communication protocols like SSH 
+PEM (.pem, .rsa, .key): used with "openSSH" SSH client (mainly for unix/linux) ; text-based forma that uses PEM encoding (Base64) to represent binary data; 
+PPK (.ppk) : used with "Putty SSH client" (for Windows) ; non-text based
+
+> How does SSL works?
+
+user ---hey server, I need to access ur website, is it trustWorthy? ------------> webserver
+     <---webserver sends copy of its SSL certificate saying, yes im trustworthy-- 
+     ------request for data/send data (secured using SSL certificate) ---------->
+inside SSL certificate,'public key' is used to encyrppt data during ssl/tls handshake , algo - RSA, DSA , ECC 
+
+> How to encrypt/decrypt something?
+
+plain text ----encryption algo + secret-key/key-pair------> cipher text 
+
+symmetric encryption : algos (AES,DES) , secret-key with both parties
+asymmetric encryption : algos (RSA,ECC) , public-key(encrypter) & private-key (decrypter)
 
 >  SDN ? software deinfed networking
 
-> What happens when u make a url req at browser ? ::
-
+> What happens when u make a url req at browser ?
 Url parsing (browser extract domain name, protocol etc) -> queries DNS server for IP of domain , DNS server returns IP  ->client makes TCP connection (Http/https=tls andshake) to returned IP  -> processing of req at server side -> data +status code+headers returned to client -> broswer do content rendering & displays  html etc page response 
 
 ----
@@ -21,6 +49,15 @@ Url parsing (browser extract domain name, protocol etc) -> queries DNS server fo
 > How to create a user without password in linux ? 
 
 > If your linux machine is working slow, how will you troubleshoot it (steps) ? 
+top /htop (dynamic list)/ps(static list) command -> resource consuming high CPU ,memory [ram] (free -h : available memory), disk I/O usage (iostat)
+check daemon and zombie process : disable/optimize unncessary background processes 
+check free disk storage -> df -h , maybe inodes are stucking sys : delete empty directories 
+update & upgrades to latest packages 
+check system (temperature) overheating as it can lead to cpu throttling & reduced performance -> tools - sensors , lm-sensors
+check system logs : /var/log/syslog , /var/log/messages for errors or warnings
+check ntw connectivity (latency) using traceroute and ping commands
+frequent swapping means slow performance -> use 'swapon -s' command
+do system tuning , load balancing to maintain load 
 
 > check free space in linux : df -h, du 
 
@@ -38,7 +75,6 @@ main [when repo created with readme/txt files] vs master branch
 #DOCKER
 
 > Challenges faced with docker in production environments ?
-1. docker image size reduction -> Sol : multistage build, distroless images
 
 > diff btw RUN and CMD in dockerfile ?
 RUN -> execute commands wile  building imagr, multiple RUN commands in a dockerfile possible
